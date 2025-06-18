@@ -10,7 +10,14 @@ class ProfileController extends Controller
 {
     public function edit()
     {
-        return view('usuario.dashboard');
+        $user = Auth::user();
+        
+        // Redirigir según el rol
+        if ($user->role === 'admin') {
+            return view('admin.demo-dashboard', compact('user'));
+        } else {
+            return view('usuario.dashboard', compact('user'));
+        }
     }
 
     public function update(Request $request)
