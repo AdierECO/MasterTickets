@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // Importa Auth para logout
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\UsuariosController; 
 
-// Rutas Públicas
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+
+Route::get('/', function () { return view('welcome'); })->name('home');
 
 Route::get('/explorar', function () {
     return view('explorar');
@@ -17,13 +16,18 @@ Route::get('/artistas/{nombre}', function ($nombre) {
 })->name('artistas.detalle');
 
 // Rutas de Autenticación (Demo)
-Route::get('/login', function () {
-    return view('auth.login-demo'); // Versión demo sin funcionalidad
-})->name('login');
+Route::get('/login', [UsuariosController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [UsuariosController::class, 'login'])->name('login.custom');
 
-Route::get('/register', function () {
-    return view('auth.register-demo'); // Versión demo sin funcionalidad
-})->name('register');
+// Registro
+Route::get('/register', [UsuariosController::class, 'showRegisterForm'])->name('register');
+Route::post('/register-demo', [UsuariosController::class, 'register'])->name('register.post');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', '\App\Http\Controllers\ProfileController@edit')->name('profile.edit');
+    Route::put('/profile', '\App\Http\Controllers\ProfileController@update')->name('profile.update');
+});
 
 // Área Admin Demo
 Route::prefix('admin-demo')->group(function () {
@@ -105,5 +109,5 @@ Route::get('/usuario/dashboard', function () {
 // Ruta para logout
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/login'); // o la ruta que quieras redirigir después de cerrar sesión
+    return redirect('/'); // o la ruta que quieras redirigir después de cerrar sesión
 })->name('logout');

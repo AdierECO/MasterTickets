@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- Usa tu layout base si tienes uno --}}
+@extends('layouts.app')
 
 @section('content')
 <div class="container-fluid bg-light" style="min-height: 100vh;">
@@ -12,31 +12,12 @@
                         <i class="bi bi-ticket-perforated"></i> Mis Eventos
                     </button>
                 </li>
-                <li class="list-group-item" role="presentation">
+                <li class="list-group-item active" role="presentation">
                     <button class="btn btn-link text-start w-100" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">
                         <i class="bi bi-person-circle"></i> Mi Información
                     </button>
                 </li>
-                <li class="list-group-item" role="presentation">
-                    <button class="btn btn-link text-start w-100" id="tarjetas-tab" data-bs-toggle="tab" data-bs-target="#tarjetas" type="button" role="tab" aria-controls="tarjetas" aria-selected="false">
-                        <i class="bi bi-credit-card-2-front"></i> Mis Tarjetas
-                    </button>
-                </li>
-                <li class="list-group-item" role="presentation">
-                    <button class="btn btn-link text-start w-100" id="historial-tab" data-bs-toggle="tab" data-bs-target="#historial" type="button" role="tab" aria-controls="historial" aria-selected="false">
-                        <i class="bi bi-clock-history"></i> Mi Historial
-                    </button>
-                </li>
-                <li class="list-group-item" role="presentation">
-                    <button class="btn btn-link text-start w-100" id="suscripcion-tab" data-bs-toggle="tab" data-bs-target="#suscripcion" type="button" role="tab" aria-controls="suscripcion" aria-selected="false">
-                        <i class="bi bi-bell"></i> Mi Suscripción
-                    </button>
-                </li>
-                <li class="list-group-item" role="presentation">
-                    <button class="btn btn-link text-start w-100" id="registros-tab" data-bs-toggle="tab" data-bs-target="#registros" type="button" role="tab" aria-controls="registros" aria-selected="false">
-                        <i class="bi bi-journal-text"></i> Mis Registros
-                    </button>
-                </li>
+                <!-- Resto de las pestañas... -->
                 <li class="list-group-item text-danger" role="presentation">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
@@ -50,84 +31,115 @@
 
         <!-- Main Content -->
         <div class="col-md-9 py-5">
-            <h4 class="mb-3">Bienvenido: {{ strtoupper('ERIK GASTON CORDERO RICO') }}</h4>
+            <h4 class="mb-3">Bienvenido: {{ strtoupper(auth()->user()->name) }}</h4>
 
             <div class="tab-content" id="sidebarTabsContent">
-                <!-- Mis Eventos -->
-                <div class="tab-pane fade show active" id="eventos" role="tabpanel" aria-labelledby="eventos-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <strong>Mis eventos</strong><br>
-                            <small>Aquí encontrarás los boletos para tus próximos eventos</small>
-                        </div>
-                        <div class="card-body text-center py-5">
-                            <h5>¡No hay eventos próximos para los cuales hayas realizado compras!</h5>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Mi Información -->
-                <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+                <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
                     <div class="card shadow-sm">
-                        <div class="card-header bg-info text-white">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                             <strong>Mi Información</strong>
+                            <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </button>
                         </div>
                         <div class="card-body">
-                            <p>Aquí puedes mostrar o editar la información del usuario.</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Información Personal</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Nombre completo</label>
+                                        <p class="form-control-plaintext">{{ auth()->user()->name }}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Correo electrónico</label>
+                                        <p class="form-control-plaintext">{{ auth()->user()->email }}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Rol</label>
+                                        <p class="form-control-plaintext">
+                                            <span class="badge bg-{{ auth()->user()->role === 'admin' ? 'primary' : 'success' }}">
+                                                {{ ucfirst(auth()->user()->role) }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Datos Adicionales</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Fecha de registro</label>
+                                        <p class="form-control-plaintext">{{ auth()->user()->created_at->format('d/m/Y H:i') }}</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Última actualización</label>
+                                        <p class="form-control-plaintext">{{ auth()->user()->updated_at->format('d/m/Y H:i') }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Mis Tarjetas -->
-                <div class="tab-pane fade" id="tarjetas" role="tabpanel" aria-labelledby="tarjetas-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-warning text-white">
-                            <strong>Mis Tarjetas</strong>
-                        </div>
-                        <div class="card-body">
-                            <p>Aquí puedes gestionar tus tarjetas de pago.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mi Historial -->
-                <div class="tab-pane fade" id="historial" role="tabpanel" aria-labelledby="historial-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-secondary text-white">
-                            <strong>Mi Historial</strong>
-                        </div>
-                        <div class="card-body">
-                            <p>Historial de compras y actividades.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mi Suscripción -->
-                <div class="tab-pane fade" id="suscripcion" role="tabpanel" aria-labelledby="suscripcion-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-success text-white">
-                            <strong>Mi Suscripción</strong>
-                        </div>
-                        <div class="card-body">
-                            <p>Información sobre tu suscripción actual.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mis Registros -->
-                <div class="tab-pane fade" id="registros" role="tabpanel" aria-labelledby="registros-tab">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-dark text-white">
-                            <strong>Mis Registros</strong>
-                        </div>
-                        <div class="card-body">
-                            <p>Registros o notas importantes para ti.</p>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Resto de las pestañas... -->
             </div>
         </div>
     </div>
 </div>
+
+<!-- Modal de Edición -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ route('profile.update') }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ auth()->user()->email }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label">Contraseña actual (para cambios)</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                <small class="text-muted">Solo necesaria si vas a cambiar la contraseña</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Nueva contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                                <small class="text-muted">Deja en blanco para mantener la actual</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Confirmar nueva contraseña</label>
+                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
