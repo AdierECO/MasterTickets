@@ -94,6 +94,19 @@
                     <i class="bi bi-tags me-2"></i> Categorías
                 </a>
             </li>
+            <li class="nav-item mt-auto">
+                <a class="nav-link" href="#" data-section="perfil">
+                    <i class="bi bi-person-circle me-2"></i> Mi Perfil
+                </a>
+            </li>
+            <li class="list-group-item text-danger" role="presentation">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="btn btn-link text-danger text-start w-100" type="submit">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </li>
         </ul>
     </div>
 
@@ -524,6 +537,81 @@
                                 <button class="btn btn-sm btn-outline-primary w-100">
                                     <i class="bi bi-pencil"></i> Editar
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-content" id="perfil">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="bg-primary bg-opacity-10 p-4 rounded-circle d-inline-block mb-3">
+                                        <i class="bi bi-person-circle display-4 text-primary"></i>
+                                    </div>
+                                    <h4>{{ strtoupper(auth()->user()->name) }}</h4>
+                                    <p class="text-muted mb-1">{{ auth()->user()->email }}</p>
+                                    <span class="badge bg-{{ auth()->user()->role === 'admin' ? 'primary' : 'success' }}">
+                                        {{ ucfirst(auth()->user()->role) }}
+                                    </span>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <div class="text-start">
+                                        <p><strong><i class="bi bi-calendar me-2"></i>Registrado:</strong> {{ auth()->user()->created_at->format('d/m/Y') }}</p>
+                                        <p><strong><i class="bi bi-clock-history me-2"></i>Última actualización:</strong> {{ auth()->user()->updated_at->format('d/m/Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0">
+                                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Perfil</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{ route('profile.update') }}">
+                                        @csrf
+                                        @method('PUT')
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="name" class="form-label">Nombre completo</label>
+                                                <input type="text" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email" class="form-label">Correo electrónico</label>
+                                                <input type="email" class="form-control" id="email" name="email" value="{{ auth()->user()->email }}" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="current_password" class="form-label">Contraseña actual</label>
+                                                <input type="password" class="form-control" id="current_password" name="current_password">
+                                                <small class="text-muted">Solo necesaria si vas a cambiar la contraseña</small>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="password" class="form-label">Nueva contraseña</label>
+                                                <input type="password" class="form-control" id="password" name="password">
+                                                <small class="text-muted">Deja en blanco para mantener la actual</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="password_confirmation" class="form-label">Confirmar nueva contraseña</label>
+                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-save me-2"></i>Guardar Cambios
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

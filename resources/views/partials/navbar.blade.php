@@ -1,4 +1,3 @@
-<!-- resources/views/partials/navbar.blade.php -->
 <nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);">
     <div class="container">
         <a class="navbar-brand" href="{{ route('home') }}">
@@ -54,8 +53,37 @@
                 </li>
             </ul>
             
-            <!-- Botones de Login y Registro -->
+            <!-- Botones de Login/Registro o Perfil según sesión -->
             <ul class="navbar-nav ms-auto">
+                @auth
+                <!-- Menú de usuario cuando hay sesión -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="me-2 d-none d-sm-inline">
+                            <span class="fw-bold">{{ Auth::user()->name }}</span>
+                            <small class="d-block text-white-50">{{ ucfirst(Auth::user()->role) }}</small>
+                        </div>
+                        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" style="background: linear-gradient(135deg, #1e40af 0%, #6d28d9 100%);">
+                        <li>
+                            <a class="dropdown-item" href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('usuario.dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i> Mi Panel
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                @else
+                <!-- Botones de Login y Registro cuando no hay sesión -->
                 <li class="nav-item ms-lg-2">
                     <a href="{{ route('login') }}" class="btn btn-outline-light">
                         <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
@@ -66,6 +94,7 @@
                         <i class="bi bi-person-plus me-1"></i> Registrarse
                     </a>
                 </li>
+                @endauth
             </ul>
         </div>
     </div>
@@ -114,6 +143,20 @@
     
     .btn-light.text-primary:hover {
         background-color: #f8f9fa;
+    }
+    
+    /* Estilo para el botón de logout en el dropdown */
+    .dropdown-item button {
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        padding: 0.25rem 1rem;
+        color: inherit;
+    }
+    
+    .dropdown-item button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
     }
 </style>
 
