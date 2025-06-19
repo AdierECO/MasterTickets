@@ -9,18 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('eventos', function (Blueprint $table) {
-            $table->id();
-            $table->string('nombre', 100);
-            $table->date('fecha');
-            $table->foreignId('lugar_id')->constrained('auditorios');
-            $table->string('categoria', 50);
-            $table->string('estado', 20); 
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('eventos', function (Blueprint $table) {
+        $table->id();
+        $table->string('nombre');
+        $table->text('descripcion');
+        $table->dateTime('fecha_hora');
+        $table->foreignId('auditorio_id')->constrained();
+        $table->foreignId('categoria_id')->constrained();
+        $table->string('imagen')->nullable();
+        $table->decimal('precio', 10, 2);
+        $table->integer('capacidad');
+        $table->timestamps();
+        $table->softDeletes();
+    });
+}
 
     /**
      * Reverse the migrations.

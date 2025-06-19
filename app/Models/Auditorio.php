@@ -9,6 +9,29 @@ class Auditorio extends Model
 {
     use HasFactory;
 
-    protected $table = 'auditorios';
-    protected $fillable = ['nombre', 'direccion', 'capacidad', 'foto'];
-}
+    protected $fillable = [
+        'nombre',
+        'direccion',
+        'ciudad',
+        'capacidad',
+        'telefono',
+        'descripcion',
+        'foto'
+    ];
+
+    protected $casts = [
+        'capacidad' => 'integer'
+    ];
+
+    public function eventos()
+    {
+        return $this->hasMany(Evento::class);
+    }
+
+    public function getFotoUrlAttribute()
+    {
+        return filter_var($this->foto, FILTER_VALIDATE_URL)
+            ? $this->foto
+            : asset('images/default-auditorio.jpg');
+    }
+}   

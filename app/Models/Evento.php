@@ -2,24 +2,37 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Evento extends Model
 {
-    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'eventos';
-    protected $fillable = ['nombre', 'fecha', 'lugar_id', 'categoria', 'estado'];
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'nombre', 
+        'descripcion',
+        'fecha_hora',
+        'auditorio_id',
+        'categoria_id',
+        'imagen',
+        'precio',
+        'capacidad'
+    ];
+    protected $dates = ['fecha_hora', 'deleted_at'];
+    protected $casts = [
+        'fecha_hora' => 'datetime:Y-m-d H:i:s',
+    ];
 
-    protected static function boot()
+    public function auditorio()
     {
-        parent::boot();
+        return $this->belongsTo(Auditorio::class);
+    }
 
-        static::saving(function ($evento) {
-            if (!in_array($evento->estado, ['Cancelado', 'Próximo', 'Activo'])) {
-                throw new \Exception("Estado no válido");
-            }
-        });
-}
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class);
+    }
 }

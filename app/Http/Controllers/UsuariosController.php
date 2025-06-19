@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UsuariosController extends Controller
 {
+    
     // Mostrar todos los usuarios
     public function index()
     {
-        $usuarios = User::all();
-        return view('usuarios.index', compact('usuarios'));
+        $usuarios = User::latest()->paginate(10);
+        return view('admin.usuarios.index', compact('usuarios'));
     }
 
     // Mostrar formulario para crear un usuario
