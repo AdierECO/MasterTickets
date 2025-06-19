@@ -1,63 +1,105 @@
-🔧 1. Configuración Inicial del Proyecto Laravel con SQL Server
-Prerrequisitos:
-PHP ≥ 8.1
+<div align="center">
+  <h1>🚀 Configuración de Proyecto Laravel con SQL Server</h1>
+  <p>Guía completa para configurar un proyecto Laravel con SQL Server como base de datos</p>
+</div>
 
-Composer
+## 🔧 1. Configuración Inicial
 
-SQL Server instalado (local o remoto)
+### Prerrequisitos
+<div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+  <ul>
+    <li>PHP ≥ 8.1</li>
+    <li>Composer</li>
+    <li>SQL Server instalado (local o remoto)</li>
+    <li>SQL Server Driver para PHP</li>
+    <li>Git instalado</li>
+  </ul>
+</div>
 
-SQL Server Driver para PHP
+### Pasos de Instalación
 
-Git instalado
+<table>
+  <tr>
+    <th width="30%">Paso</th>
+    <th>Comando/Configuración</th>
+  </tr>
+  <tr>
+    <td>1. Instalar extensión SQL Server</td>
+    <td>
+      <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; font-family: monospace;">
+        # Ubuntu/Debian<br>
+        sudo apt-get install php-sqlsrv<br><br>
+        # Windows<br>
+        pecl install sqlsrv pdo_sqlsrv
+      </div>
+      <p>Agregar a php.ini:</p>
+      <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; font-family: monospace;">
+        extension=sqlsrv<br>
+        extension=pdo_sqlsrv
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>2. Crear proyecto Laravel</td>
+    <td>
+      <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; font-family: monospace;">
+        composer create-project laravel/laravel nombre-proyecto<br>
+        cd nombre-proyecto
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>3. Configurar .env</td>
+    <td>
+      <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; font-family: monospace;">
+        DB_CONNECTION=sqlsrv<br>
+        DB_HOST=tu_servidor_sql<br>
+        DB_PORT=1433<br>
+        DB_DATABASE=nombre_bd<br>
+        DB_USERNAME=tu_usuario<br>
+        DB_PASSWORD=tu_contraseña
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>4. Instalar controlador ODBC (Windows)</td>
+    <td>
+      <a href="https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server" target="_blank">Descargar ODBC Driver</a>
+    </td>
+  </tr>
+  <tr>
+    <td>5. Instalar paquete Laravel SQLSRV</td>
+    <td>
+      <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; font-family: monospace;">
+        composer require doctrine/dbal
+      </div>
+    </td>
+  </tr>
+</table>
 
-Pasos:
-Instalar extensión SQL Server para PHP:
+## 🚀 2. Ejecutar el Proyecto
 
-bash
-# Para Ubuntu/Debian
-sudo apt-get install php-sqlsrv
+<div style="background: #f0f8f0; padding: 15px; border-radius: 8px; margin: 20px 0;">
+  <h3>Migraciones y base de datos</h3>
+  <div style="background: #e8f4e8; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0;">
+    php artisan migrate
+  </div>
+  
+  <h3>Servidor de desarrollo</h3>
+  <div style="background: #e8f4e8; padding: 10px; border-radius: 5px; font-family: monospace; margin: 10px 0;">
+    php artisan serve
+  </div>
+  <p>🔗 Abre: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+</div>
 
-# Para Windows (usando PECL)
-pecl install sqlsrv pdo_sqlsrv
-Agrega estas líneas a tu php.ini:
-
-ini
-extension=sqlsrv
-extension=pdo_sqlsrv
-Crear nuevo proyecto Laravel:
-
-bash
-composer create-project laravel/laravel nombre-proyecto
-cd nombre-proyecto
-Configurar .env para SQL Server:
-
-env
-DB_CONNECTION=sqlsrv
-DB_HOST=tu_servidor_sql (ej: 127.0.0.1, localhost\SQLEXPRESS)
-DB_PORT=1433
-DB_DATABASE=nombre_bd
-DB_USERNAME=tu_usuario
-DB_PASSWORD=tu_contraseña
-Instalar controlador ODBC (solo Windows):
-
-Descargar ODBC Driver for SQL Server
-
-Configurar DSN si es necesario
-
-Instalar paquete Laravel SQLSRV:
-
-bash
-composer require doctrine/dbal
-🚀 2. Ejecutar el Proyecto
-Migraciones y base de datos:
-
-bash
-php artisan migrate
-Ejecutar servidor de desarrollo:
-
-bash
-php artisan serve
-Abre: http://localhost:8000
+<div style="margin-top: 40px; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+  <h2>📌 Notas Importantes</h2>
+  <ul>
+    <li>Verifica que el servicio SQL Server esté corriendo</li>
+    <li>Revisa configuración de firewall (puerto 1433)</li>
+    <li>Para problemas de conexión usa: <code>telnet IP 1433</code></li>
+  </ul>
+</div>
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
