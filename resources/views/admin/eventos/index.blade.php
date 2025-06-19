@@ -1,75 +1,100 @@
-<!-- resources/views/admin/eventos/index.blade.php -->
 @extends('layouts.admin')
 
+@section('title', 'Listado de Eventos')
+
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Gestión de Eventos</h4>
-                    <a href="{{ route('admin.eventos.create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-lg"></i> Nuevo Evento
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Fecha</th>
-                                    <th>Lugar</th>
-                                    <th>Categoría</th>
-                                    <th>Estado</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($eventos as $evento)
-                                <tr>
-                                    <td>{{ $evento->id }}</td>
-                                    <td>{{ $evento->nombre }}</td>
-                                    <td>{{ $evento->fecha->format('d/m/Y H:i') }}</td>
-                                    <td>{{ $evento->auditorio->nombre }}</td>
-                                    <td>{{ $evento->categoria->nombre }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $evento->estado == 'activo' ? 'success' : 'secondary' }}">
-                                            {{ ucfirst($evento->estado) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('admin.eventos.edit', $evento->id) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <button class="btn btn-sm btn-danger" onclick="confirmDelete({{ $evento->id }})">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="mt-3">
-                        {{ $eventos->links() }}
-                    </div>
-                </div>
-            </div>
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Gestión de Eventos</h5>
+        <a href="{{ route('admin.eventos.create') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-circle"></i> Nuevo Evento
+        </a>
+    </div>
+    <div class="card-body">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Fecha y Hora</th>
+                        <th>Auditorio</th>
+                        <th>Categoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($eventos as $evento)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $evento->nombre }}</td>
+                        <td>
+                            @isset($evento->fecha_hora)
+                                {{ $evento->fecha_hora->format('d/m/Y H:i') }}
+                            @else
+                                <span class="text-muted">Fecha no definida</span>
+                            @endisset
+                        </td>
+                        <td>{{ $evento->auditorio->nombre ?? 'N/A' }}</td>
+                        <td>
+                            @if($evento->categoria)
+                                <i class="bi bi-{{ $evento->categoria->icono ?? 'question-circle' }} me-2"></i>
+                                {{ $evento->categoria->nombre }}
+                            @else
+                                <span class="text-muted">N/A</span>
+                            @endif
+                        </td>
+                        <td class="d-flex gap-2">
+                            <a href="{{ route('admin.eventos.edit', $evento->id) }}" 
+                               class="btn btn-sm btn-warning"
+                               title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form action="{{ route('admin.eventos.destroy', $evento->id) }}" 
+                                  method="POST"
+                                  class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('¿Estás seguro de eliminar este evento?')"
+                                        title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No hay eventos registrados</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
+
+        @if($eventos instanceof \Illuminate\Pagination\AbstractPaginator && $eventos->hasPages())
+            {{ $eventos->links() }}
+        @endif
     </div>
 </div>
+@endsection
 
-@push('scripts')
-<script>
-function confirmDelete(id) {
-    if (confirm('¿Estás seguro de eliminar este evento?')) {
-        document.getElementById('delete-form-' + id).submit();
+@section('styles')
+<style>
+    .table th {
+        white-space: nowrap;
     }
-}
-</script>
-@endpush
+    .pagination {
+        justify-content: center;
+    }
+    .bi {
+        font-size: 1.2rem;
+        vertical-align: middle;
+    }
+</style>
 @endsection
