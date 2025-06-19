@@ -1,3 +1,65 @@
+🔧 1. Configuración Inicial del Proyecto Laravel con SQL Server
+Prerrequisitos:
+PHP ≥ 8.1
+
+Composer
+
+SQL Server instalado (local o remoto)
+
+SQL Server Driver para PHP
+
+Git instalado
+
+Pasos:
+Instalar extensión SQL Server para PHP:
+
+bash
+# Para Ubuntu/Debian
+sudo apt-get install php-sqlsrv
+
+# Para Windows (usando PECL)
+pecl install sqlsrv pdo_sqlsrv
+Agrega estas líneas a tu php.ini:
+
+ini
+extension=sqlsrv
+extension=pdo_sqlsrv
+Crear nuevo proyecto Laravel:
+
+bash
+composer create-project laravel/laravel nombre-proyecto
+cd nombre-proyecto
+Configurar .env para SQL Server:
+
+env
+DB_CONNECTION=sqlsrv
+DB_HOST=tu_servidor_sql (ej: 127.0.0.1, localhost\SQLEXPRESS)
+DB_PORT=1433
+DB_DATABASE=nombre_bd
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
+Instalar controlador ODBC (solo Windows):
+
+Descargar ODBC Driver for SQL Server
+
+Configurar DSN si es necesario
+
+Instalar paquete Laravel SQLSRV:
+
+bash
+composer require doctrine/dbal
+🚀 2. Ejecutar el Proyecto
+Migraciones y base de datos:
+
+bash
+php artisan migrate
+Ejecutar servidor de desarrollo:
+
+bash
+php artisan serve
+Abre: http://localhost:8000
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
